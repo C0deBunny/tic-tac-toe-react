@@ -1,8 +1,9 @@
 import { useState } from "react"
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, className }) {
+	//Adds class to winningTiles
 	return (
-		<button className="square" onClick={onSquareClick}>
+		<button className={"square " + className} onClick={onSquareClick}>
 			{value}
 		</button>
 	)
@@ -79,8 +80,11 @@ function Square({ value, onSquareClick }) {
 // }
 
 function NewBoard({ xIsNext, squares, onPlay }) {
+	// Destructuring of winner calculation with defaults to no winner
+	const { winner = null, winningTiles = [] } = calculateWinner(squares) || {}
+
 	function handleClick(i) {
-		if (squares[i] || calculateWinner(squares)) return
+		if (squares[i] || winner) return
 
 		const nextSquares = squares.slice()
 		if (xIsNext) {
@@ -91,7 +95,6 @@ function NewBoard({ xIsNext, squares, onPlay }) {
 		onPlay(nextSquares)
 	}
 
-	const winner = calculateWinner(squares)
 	let status
 	if (winner) {
 		status = `Winner: ${winner}`
@@ -105,6 +108,7 @@ function NewBoard({ xIsNext, squares, onPlay }) {
 		[6, 7, 8],
 	]
 
+	// Gives className to squares that include winningTiles
 	return (
 		<>
 			<div className="status">{status}</div>
@@ -115,6 +119,9 @@ function NewBoard({ xIsNext, squares, onPlay }) {
 							key={numIndex}
 							value={squares[num]}
 							onSquareClick={() => handleClick(num)}
+							className={
+								winningTiles.includes(num) ? "winningTile" : ""
+							}
 						/>
 					))}
 				</div>
@@ -126,6 +133,7 @@ function NewBoard({ xIsNext, squares, onPlay }) {
 export default function Game() {
 	const [history, setHistory] = useState([Array(9).fill(null)])
 	const [currentMove, setCurrentMove] = useState(0)
+	const [ascending, setAscending] = useState(true)
 	const xIsNext = currentMove % 2 === 0
 	const currentSquares = history[currentMove]
 
@@ -159,6 +167,8 @@ export default function Game() {
 		)
 	})
 
+	const sortedMoves = ascending ? moves : [...moves].reverse()
+
 	return (
 		<div className="game">
 			<div className="game-board">
@@ -169,8 +179,13 @@ export default function Game() {
 				/>
 			</div>
 			<div className="game-info">
-				<button className="sort-button">Change order</button>
-				<ol>{moves}</ol>
+				<button
+					className="sort-button"
+					onClick={() => setAscending((a) => !a)}
+				>
+					{ascending ? "descending" : "ascending"} order
+				</button>
+				<ul>{sortedMoves}</ul>
 			</div>
 		</div>
 	)
@@ -194,7 +209,8 @@ function calculateWinner(squares) {
 			squares[a] === squares[b] &&
 			squares[c] === squares[a]
 		) {
-			return squares[a]
+			// Changed to object to give information about winner and winningTiles
+			return { winner: squares[a], winningTiles: lines[i] }
 		}
 	}
 

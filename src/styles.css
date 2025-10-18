@@ -64,8 +64,6 @@ body {
 	font-weight: bold;
 	line-height: 34px;
 	height: 34px;
-	margin-right: -1px;
-	margin-top: -1px;
 	padding: 0;
 	text-align: center;
 	width: 34px;
@@ -90,5 +88,13 @@ body {
 }
 
 .sort-button {
-	margin-left: 40px;
+	margin-left: 20px;
+}
+
+.game-info ul {
+	list-style-type: none;
+}
+
+.winningTile {
+	border: solid 2px green;
 }
