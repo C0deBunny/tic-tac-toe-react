@@ -3,6 +3,7 @@
 }
 
 body {
+	align-items: center;
 	font-family: sans-serif;
 	margin: 20px;
 	padding: 0;
@@ -91,10 +92,44 @@ body {
 	margin-left: 20px;
 }
 
+/* My additions */
+
+body {
+	display: flex;
+	justify-content: center;
+	height: 100vh;
+	margin: 0px;
+	background-color: #121f28;
+}
+
+.status {
+	font-size: 60px;
+	color: #fefdfd;
+}
+
+.square {
+	height: 150px;
+	width: 150px;
+	font-size: 80px;
+	color: #fefdfd;
+	border: solid 4px #fefdfd;
+	background-color: #182935;
+}
+
 .game-info ul {
 	list-style-type: none;
+	color: #fefdfd;
 }
 
 .winningTile {
-	border: solid 2px green;
+	border: solid 6px #ff705a;
+}
+
+.game-info {
+	margin-top: 10px;
+	font-size: 30px;
+}
+
+.game-info button {
+	font-size: 30px;
 }
