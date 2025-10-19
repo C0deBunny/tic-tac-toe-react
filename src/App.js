@@ -1,9 +1,13 @@
 import { useState } from "react"
 
-function Square({ value, onSquareClick, className }) {
+function Square({ value, onSquareClick, color, winnerColor }) {
 	//Adds class to winningTiles
 	return (
-		<button className={"square " + className} onClick={onSquareClick}>
+		<button
+			className={"square"}
+			onClick={onSquareClick}
+			style={{ color, borderColor: winnerColor }}
+		>
 			{value}
 		</button>
 	)
@@ -79,7 +83,7 @@ function Square({ value, onSquareClick, className }) {
 // 	)
 // }
 
-function NewBoard({ xIsNext, squares, onPlay }) {
+function NewBoard({ xIsNext, squares, onPlay, xColor, oColor }) {
 	// Destructuring of winner calculation with defaults to no winner
 	const { winner = null, winningTiles = [] } = calculateWinner(squares) || {}
 
@@ -102,6 +106,9 @@ function NewBoard({ xIsNext, squares, onPlay }) {
 		status = `Next player: ${xIsNext ? "X" : "O"}`
 	}
 
+	const winnerColor =
+		winner === "X" ? xColor : winner === "O" ? oColor : "#f2efea"
+
 	const grid = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -114,16 +121,28 @@ function NewBoard({ xIsNext, squares, onPlay }) {
 			<div className="status">{status}</div>
 			{grid.map((row, rowIndex) => (
 				<div key={rowIndex} className="board-row">
-					{row.map((num, numIndex) => (
-						<Square
-							key={numIndex}
-							value={squares[num]}
-							onSquareClick={() => handleClick(num)}
-							className={
-								winningTiles.includes(num) ? "winningTile" : ""
-							}
-						/>
-					))}
+					{row.map((num, numIndex) => {
+						const player = squares[num]
+						const color =
+							player === "X"
+								? xColor
+								: player === "O"
+								? oColor
+								: undefined
+						return (
+							<Square
+								key={numIndex}
+								value={squares[num]}
+								onSquareClick={() => handleClick(num)}
+								color={color}
+								winnerColor={
+									winningTiles.includes(num)
+										? winnerColor
+										: ""
+								}
+							/>
+						)
+					})}
 				</div>
 			))}
 		</>
@@ -136,6 +155,8 @@ export default function Game() {
 	const [ascending, setAscending] = useState(true)
 	const xIsNext = currentMove % 2 === 0
 	const currentSquares = history[currentMove]
+	const [xColor, setXColor] = useState("#ff4d4f")
+	const [oColor, setOColor] = useState("#1677ff")
 
 	function handlePlay(nextSquares) {
 		const nextHistory = [...history.slice(0, currentMove + 1), nextSquares]
@@ -149,17 +170,29 @@ export default function Game() {
 
 	const moves = history.map((squares, move) => {
 		let description
-		if (move > 0) {
-			description = `Go to move #${move}`
+		if (move === 0) {
+			description = "Game start"
 		} else {
-			description = "Go to game start"
+			// Find the current cell that is selected
+			const prev = history[move - 1]
+			const curr = history[move]
+			const cell = curr.findIndex((c, p) => c !== prev[p])
+
+			// Calculate the rows and columns
+			const row = Math.floor(cell / 3) + 1
+			const col = (cell % 3) + 1
+
+			// Player X or O
+			const player = curr[cell]
+
+			description = `#${move} (${player} at row${row}, col${col})`
 		}
 
 		// Ternary to replace current move button with "You are at move #" text
 		return (
 			<li key={move}>
 				{move === currentMove ? (
-					<div>You are at move #{move + 1}</div>
+					<div>#{move} is selected</div>
 				) : (
 					<button onClick={() => jumpTo(move)}>{description}</button>
 				)}
@@ -171,11 +204,31 @@ export default function Game() {
 
 	return (
 		<div className="game">
+			<div className="color-pickers-container">
+				<div className="color-pickers">
+					<label>X </label>
+					<input
+						type="color"
+						value={xColor}
+						onChange={(e) => setXColor(e.target.value)}
+					/>
+				</div>
+				<div className="color-pickers">
+					<label>O </label>
+					<input
+						type="color"
+						value={oColor}
+						onChange={(e) => setOColor(e.target.value)}
+					/>
+				</div>
+			</div>
 			<div className="game-board">
 				<NewBoard
 					xIsNext={xIsNext}
 					squares={currentSquares}
 					onPlay={handlePlay}
+					xColor={xColor}
+					oColor={oColor}
 				/>
 			</div>
 			<div className="game-info">

@@ -99,31 +99,33 @@ body {
 	justify-content: center;
 	height: 100vh;
 	margin: 0px;
-	background-color: #121f28;
+	background-color: #151719;
 }
 
 .status {
 	font-size: 60px;
-	color: #fefdfd;
+	font-weight: 600;
+	color: #f2efea;
+	text-align: center;
 }
 
 .square {
 	height: 150px;
 	width: 150px;
 	font-size: 80px;
-	color: #fefdfd;
-	border: solid 4px #fefdfd;
-	background-color: #182935;
+	color: #f2efea;
+	border: solid 4px #f2efea;
+	background-color: #202427;
 }
 
 .game-info ul {
 	list-style-type: none;
-	color: #fefdfd;
+	color: #f2efea;
 }
 
-.winningTile {
-	border: solid 6px #ff705a;
-}
+/* .winningTile {
+	border: solid 6px #fc7753;
+} */
 
 .game-info {
 	margin-top: 10px;
@@ -132,4 +134,32 @@ body {
 
 .game-info button {
 	font-size: 30px;
+	width: 400px;
+	text-align: start;
+	color: #f2efea;
+	background-color: #202427;
+	border-radius: 4px;
+}
+
+.game-info li div {
+	width: 400px;
+	font-weight: 600;
+}
+
+.color-pickers-container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-right: 20px;
+	margin-top: 80px;
+}
+
+.color-pickers {
+	display: flex;
+	gap: 10px;
+}
+
+.color-pickers label {
+	font-size: 1.5rem;
+	color: #f2efea;
 }
